@@ -11,7 +11,6 @@ verbs = [
 ]
 
 home_dir = getenv("USERPROFILE")
-
 note_file = f"{home_dir}\\.note"
 
 now = datetime.now()
@@ -35,11 +34,16 @@ def add(text):
     "date_time": now.strftime("%H:%M %d/%m/%y"),
     "note": text
   }
+  # TODO these are dumb and redudant checks, need to verify an clear
   if verify_file_integrity():
     with open(note_file) as f:
       data = json.load(f)
-    last_entry = int(list(data.keys())[-1])
-    new_entry = last_entry + 1
+    if len(data) < 1:
+      print('no data in file')
+      new_entry = 1
+    else:
+      last_entry = int(list(data.keys())[-1])
+      new_entry = last_entry + 1
     out = {
       new_entry: temp
     }
@@ -69,8 +73,9 @@ def get():
     
     for key in keys:
       temp = data[key]
-      print("Date/Time : " + temp['date_time'])
-      print("Note:\n\t" + temp['note'] + "\n")
+      date_time = temp['date_time']
+      note = temp['note']
+      print(f"id: {key} | Date/Time: {date_time}\n\n\t{note}\n")
       print("-----------------------")
   else:
     print("no notes saved")
@@ -81,6 +86,19 @@ def clearall():
   else:
     print("failed integrity check...")
 
+def delete(id):
+  if verify_file_integrity():
+    with open(note_file) as f:
+      data = json.load(f)
+    try:
+      data.pop(id)
+      with open(note_file, "w") as f:
+        json.dump(data, f)
+      print(f"entry '{id}' removed")
+    except KeyError:
+      print(f"provided id : {id} was invalid")
+  else:
+    print("failed integrity check")
 if __name__ == "__main__":
   if len(sys.argv) <= 1:
     print("not enough information provided")
@@ -105,3 +123,9 @@ if __name__ == "__main__":
     get()
   elif verb == "clearall":
     clearall()
+  elif verb == "delete":
+    id = sys.argv[2]
+    if not id.isnumeric():
+      print("please provide a numeric value")
+      exit(3)
+    delete(id)
