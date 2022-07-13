@@ -1,4 +1,3 @@
-from importlib.metadata import entry_points
 from setuptools import setup, find_packages
 import pathlib
 
@@ -17,11 +16,11 @@ setup(
   classifiers=[
     "Programming Language :: Python :: 3.10",
   ],
-  packages=find_packages(where="src"),
-  python_required=">=3.8, <4",
+  packages=find_packages(where="."),
+  python_requires=">=3.8, <4",
   entry_points={
-    "console_scripts": [
-      "note=note:main"
+    "console_scripts":[
+      "note=src.note:main"
     ]
   }
 )
