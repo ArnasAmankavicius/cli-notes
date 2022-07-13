@@ -7,7 +7,7 @@ from pathlib import Path
 from datetime import datetime
 
 verbs = [
-  "add", "delete", "edit", "clearall", "get"
+  "a", "d", "e", "ca", "g"
 ]
 
 home_dir = getenv("USERPROFILE")
@@ -39,7 +39,6 @@ def add(text):
     with open(note_file) as f:
       data = json.load(f)
     if len(data) < 1:
-      print('no data in file')
       new_entry = 1
     else:
       last_entry = int(list(data.keys())[-1])
@@ -53,9 +52,9 @@ def add(text):
     with open(note_file, 'w') as f:
       json.dump(data, f)
 
-    print(json.dumps(out))
+    print(f"entry '{new_entry}' has been added. type 'note get' to view all entries.")
   else:
-    print("failed integrity check")
+    print(f'no database file found, creating...')
     new_entry = 1
     out = {
       new_entry: temp
@@ -84,7 +83,7 @@ def clearall():
   if verify_file_integrity():
     remove(note_file)
   else:
-    print("failed integrity check...")
+    print(f'no database file found')
 
 def delete(id):
   if verify_file_integrity():
@@ -98,7 +97,7 @@ def delete(id):
     except KeyError:
       print(f"provided id : {id} was invalid")
   else:
-    print("failed integrity check")
+    print(f'no database file found')
 
 def main():
   if len(sys.argv) <= 1:
@@ -115,16 +114,16 @@ def main():
   if not Path(note_file).exists():
     Path(note_file).touch()
   
-  if verb == "add":
+  if verb == verbs[0]:
     if len(sys.argv) <= 2:
       print("please provide information you wish to add")
       exit(2)
     add(sys.argv[2])
-  elif verb == "get":
+  elif verb == verbs[4]:
     get()
-  elif verb == "clearall":
+  elif verb == verbs[3]:
     clearall()
-  elif verb == "delete":
+  elif verb == verbs[1]:
     id = sys.argv[2]
     if not id.isnumeric():
       print("please provide a numeric value")

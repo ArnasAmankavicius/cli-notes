@@ -20,7 +20,7 @@ setup(
   python_requires=">=3.8, <4",
   entry_points={
     "console_scripts":[
-      "note=src.note:main"
+      "nt=src.note:main"
     ]
   }
 )
