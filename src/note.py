@@ -99,7 +99,8 @@ def delete(id):
       print(f"provided id : {id} was invalid")
   else:
     print("failed integrity check")
-if __name__ == "__main__":
+
+def main():
   if len(sys.argv) <= 1:
     print("not enough information provided")
     exit(1)
@@ -129,3 +130,6 @@ if __name__ == "__main__":
       print("please provide a numeric value")
       exit(3)
     delete(id)
+
+if __name__ == "__main__":
+  main()
